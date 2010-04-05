@@ -13,9 +13,9 @@ type
   private
     FOnThreadError: TGetStrProc;
   protected
-    procedure Inicializa;virtual;abstract;
-    procedure Repete;virtual;abstract;
-    procedure Finaliza;virtual;abstract;
+    procedure Inicializa;virtual;
+    procedure Repete;virtual;
+    procedure Finaliza;virtual;
 
     procedure RaiseThreadErrorEvent( Msg : ShortString );
   public
@@ -75,6 +75,16 @@ finally
   end;
 end;
 
+procedure TThreadSimprona.Finaliza;
+begin
+
+end;
+
+procedure TThreadSimprona.Inicializa;
+begin
+
+end;
+
 procedure TThreadSimprona.RaiseThreadErrorEvent(Msg: ShortString);
 begin
 if not Assigned(FOnThreadError) then
@@ -84,6 +94,11 @@ try
   FOnThreadError(Msg);
 except
 end;
+end;
+
+procedure TThreadSimprona.Repete;
+begin
+
 end;
 
 end.
