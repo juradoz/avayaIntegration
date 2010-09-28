@@ -7,7 +7,7 @@ unit uStreamerCtConector;
 interface
 
 uses uThreadSimprona, uTsplatfm_h, uACSDefs_h, uACS_h, uCstaDefs_h, uCSTA_h,
-  uATTPriv_h, Windows, uCtEvents, uCtTypes;
+  uATTPriv_h, Windows, uCtEvents, uCtTypes, Classes;
 
 { Default error code assumed on CSTA method calls }
 const DEFAULT_ERROR_CODE = ACSERR_UNKNOWN;
@@ -25,6 +25,8 @@ type
     { General CT Event field. Raises an event on every CtEvent received. }
     FOnCtEvent                  : TCtEvent;
 
+    FOnACSAbortStream           : TNotifyEvent;
+
     { Confirmation event fields }
     FOnACSOpenStreamConf        : TACSOpenStreamConfEvent;
     FOnACSCloseStreamConf       : TACSCloseStreamConfEvent;
@@ -34,6 +36,7 @@ type
     { General CT Event raiser }
     procedure RaiseCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
 
+    procedure RaiseACSAbortStreamConfEvent;
     { Confirmation raisers }
     procedure RaiseACSOpenStreamConfEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
     procedure RaiseACSCloseStreamConfEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
@@ -96,6 +99,7 @@ type
     { General CT Event }
     property OnCtEvent                  : TCtEvent                       read FOnCtEvent                  write FOnCtEvent;
 
+    property OnACSAbortStream           : TNotifyEvent                   read FOnACSAbortStream           write FOnACSAbortStream;
     { Confirmation events in this scope }
     property OnACSOpenStreamConf        : TACSOpenStreamConfEvent        read FOnACSOpenStreamConf        write FOnACSOpenStreamConf;
     property OnACSCloseStreamConf       : TACSCloseStreamConfEvent       read FOnACSCloseStreamConf       write FOnACSCloseStreamConf;
@@ -279,6 +283,9 @@ case Event.eventHeader.eventClass of
 
       ACS_UNIVERSAL_FAILURE_CONF :
         RaiseACSUniversalFailureConfEvent( Event, PrivateData );
+
+      ACS_ABORT_STREAM :
+        RaiseACSAbortStreamConfEvent;
 
     end;
 
@@ -516,6 +523,22 @@ function TStreamerCtConector.AbortStream: TSAPI;
 begin
 Result := acsAbortStream(FAcsHandle, nil);
 CheckForGoodCtResult( Result, 'acsAbortStream' );
+end;
+
+procedure TStreamerCtConector.RaiseACSAbortStreamConfEvent;
+begin
+{ ACSAbortStreamConfEvent event raiser }
+if Assigned( FOnACSAbortStream ) then
+  begin
+  try
+    FOnACSAbortStream( Self );
+  except
+    on E : Exception do
+      begin
+      CatchEventException( 'FOnACSCloseStreamConf', E.Message );
+      end;
+  end;
+  end;
 end;
 
 end.
