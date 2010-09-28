@@ -287,6 +287,7 @@ case Event.eventHeader.eventClass of
       ACS_ABORT_STREAM :
         RaiseACSAbortStreamConfEvent;
 
+
     end;
 
   { Confirmations at CSTA scope }
@@ -522,7 +523,9 @@ end;
 function TStreamerCtConector.AbortStream: TSAPI;
 begin
 Result := acsAbortStream(FAcsHandle, nil);
-CheckForGoodCtResult( Result, 'acsAbortStream' );
+if not CheckForGoodCtResult( Result, 'acsAbortStream' ) then
+  exit;
+FAcsHandle := 0;
 end;
 
 procedure TStreamerCtConector.RaiseACSAbortStreamConfEvent;
