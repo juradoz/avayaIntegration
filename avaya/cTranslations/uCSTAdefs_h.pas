@@ -341,6 +341,7 @@ type
 
   RouteRegisterReqID_t = Integer;
   RoutingCrossRefID_t  = Integer;
+  RetryValue_t = Smallint;
 
   SelectValue_t = ( SV_NORMAL = 0,
     SV_LEAST_COST             = 1,
@@ -348,10 +349,11 @@ type
     SV_ACD                    = 3,
     SV_USER_DEFINED           = 4 );
 
-   SetUpValues_t = record
-     length : _Int;
-     value  : ^Byte;
-     end;
+  pSetUpValues_t = ^SetUpValues_t;
+  SetUpValues_t = record
+    length : _Int;
+    value  : ^Byte;
+    end;
 
 
   CSTARouteRequestEvent_t = record

@@ -234,6 +234,29 @@ function cstaQueryDeviceInfo ( acsHandle : ACSHandle_t; invokeID : InvokeID_t;
   const device : pDeviceID_t;
   const privateData   : pPrivateData_t): TSAPI; stdcall; external CSTA_DLL_NAME;
 
+function cstaRouteRegisterReq( acsHandle : ACSHandle_t; invokeID : InvokeID_t;
+  const routingDevice : pDeviceID_t;
+  const privateData   : pPrivateData_t ) : TSAPI; stdcall; external CSTA_DLL_NAME;
+
+function cstaRouteRegisterCancel( acsHandle : ACSHandle_t; invokeID : InvokeID_t;
+  const routeRegisterReqID : RouteRegisterReqID_t;
+  const privateData   : pPrivateData_t ) : TSAPI; stdcall; external CSTA_DLL_NAME;
+
+function cstaRouteSelectInv( acsHandle : ACSHandle_t; invokeID : InvokeID_t;
+  const routeRegisterReqID : RouteRegisterReqID_t;
+  const routingCrossRefID : RoutingCrossRefID_t;
+  const routeSelected : pDeviceID_t;
+  const remainRetry : RetryValue_t;
+  const setupInformation : pSetUpValues_t;
+  const routeUsedReq : Boolean;
+  const privateData : pPrivateData_t) : TSAPI; stdcall; external CSTA_DLL_NAME;
+
+function cstaRouteEndInv( acsHandle : ACSHandle_t; invokeID : InvokeID_t;
+  const routeRegisterReqID : RouteRegisterReqID_t;
+  const routingCrossRefID : RoutingCrossRefID_t;
+  const errorValue : CSTAUniversalFailure_t;
+  const privateData : pPrivateData_t) : TSAPI; stdcall; external CSTA_DLL_NAME;
+
 implementation
 
 end.
