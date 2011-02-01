@@ -9,8 +9,10 @@ type
   TRoutingServicesCtConector = class(TEscapeServicesCtConector)
   private
     FOnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent;
+    FOnCSTARouteRegisterRegisterCancelConf : TCSTARouteRegisterCancelConfEvent;
 
     procedure RaiseCSTARouteRegisterReqConfEvent(Event : CSTAEvent_t; PrivateData : ATTPrivateData_t);
+    procedure RaiseCSTARouteRegisterCancelConfEvent(Event : CSTAEvent_t; PrivateData : ATTPrivateData_t);
   protected
     procedure HandleCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );override;
   public
@@ -28,6 +30,7 @@ type
       const InvokeId : TInvokeID = 0) : TSAPI;
   published
     property OnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent read FOnCSTARouteRegisterRegisterRecConf write FOnCSTARouteRegisterRegisterRecConf;
+    property OnCSTARouteRegisterRegisterCancelConf : TCSTARouteRegisterCancelConfEvent read FOnCSTARouteRegisterRegisterCancelConf write FOnCSTARouteRegisterRegisterCancelConf;
   end;
 
 implementation
@@ -45,14 +48,45 @@ case Event.eventHeader.eventClass of
     case Event.eventHeader.eventType of
       CSTA_ROUTE_REGISTER_REQ_CONF :
         RaiseCSTARouteRegisterReqConfEvent(Event, PrivateData);
+
+      CSTA_ROUTE_REGISTER_CANCEL_CONF :
+        RaiseCSTARouteRegisterCancelConfEvent(Event, PrivateData);
       end;
   end;
+end;
+
+procedure TRoutingServicesCtConector.RaiseCSTARouteRegisterCancelConfEvent(
+  Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
+begin
+if not Assigned(FOnCSTARouteRegisterRegisterCancelConf) then
+  exit;
+
+try
+  FOnCSTARouteRegisterRegisterCancelConf(Self, Event._event.cstaConfirmation.invokeID,
+    Event._event.cstaConfirmation.routeCancel.routeRegisterReqID);
+except
+  on E : Exception do
+    begin
+    CatchEventException( 'FOnCSTARouteRegisterRegisterCancelConf', E.Message );
+    end;
+end;
 end;
 
 procedure TRoutingServicesCtConector.RaiseCSTARouteRegisterReqConfEvent(
   Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
 begin
-if not Assigned
+if not Assigned(FOnCSTARouteRegisterRegisterRecConf) then
+  exit;
+
+try
+  FOnCSTARouteRegisterRegisterRecConf(Self, Event._event.cstaConfirmation.invokeID,
+    Event._event.cstaConfirmation.routeRegister.registerReqID);
+except
+  on E : Exception do
+    begin
+    CatchEventException( 'FOnCSTARouteRegisterRegisterRecConf', E.Message );
+    end;
+end;
 end;
 
 function TRoutingServicesCtConector.RouteEndInv(

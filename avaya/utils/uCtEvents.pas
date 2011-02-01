@@ -433,7 +433,10 @@ type
       uname      : ATTUnicodeDeviceID_t) of object;
 
   TCSTARouteRegisterReqConfEvent = procedure(Sender : TObject; InvokeID : TInvokeID;
-    routeRegisterReqId : RouteRegisterReqID_t) object;
+    routeRegisterReqId : RouteRegisterReqID_t) of object;
+
+  TCSTARouteRegisterCancelConfEvent = procedure(Sender : TObject; InvokeID : TInvokeID;
+    routeRegisterReqId : RouteRegisterReqID_t) of object;
 
 implementation
 
