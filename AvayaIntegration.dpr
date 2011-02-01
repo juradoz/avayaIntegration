@@ -22,7 +22,8 @@ uses
   uCtMessages in 'avaya\utils\uCtMessages.pas',
   uCtTypes in 'avaya\utils\uCtTypes.pas',
   uTranslations in 'avaya\utils\uTranslations.pas',
-  uThreadSimprona in 'threads\uThreadSimprona.pas';
+  uThreadSimprona in 'threads\uThreadSimprona.pas',
+  uRoutingServicesCtConector in 'avaya\classes\uRoutingServicesCtConector.pas';
 
 {$R *.res}
 
