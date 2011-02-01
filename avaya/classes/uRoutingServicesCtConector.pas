@@ -10,9 +10,11 @@ type
   private
     FOnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent;
     FOnCSTARouteRegisterRegisterCancelConf : TCSTARouteRegisterCancelConfEvent;
+    FOnCSTARouteRegisterAbort : TCSTARouteRegisterAbortEvent;
 
     procedure RaiseCSTARouteRegisterReqConfEvent(Event : CSTAEvent_t; PrivateData : ATTPrivateData_t);
     procedure RaiseCSTARouteRegisterCancelConfEvent(Event : CSTAEvent_t; PrivateData : ATTPrivateData_t);
+    procedure RaiseCSTARouteRegisterAbortEvent(Event : CSTAEvent_t; PrivateData : ATTPrivateData_t);
   protected
     procedure HandleCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );override;
   public
@@ -31,6 +33,7 @@ type
   published
     property OnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent read FOnCSTARouteRegisterRegisterRecConf write FOnCSTARouteRegisterRegisterRecConf;
     property OnCSTARouteRegisterRegisterCancelConf : TCSTARouteRegisterCancelConfEvent read FOnCSTARouteRegisterRegisterCancelConf write FOnCSTARouteRegisterRegisterCancelConf;
+    property OnCSTARouteRegisterAbort : TCSTARouteRegisterAbortEvent read FOnCSTARouteRegisterAbort write FOnCSTARouteRegisterAbort;
   end;
 
 implementation
@@ -52,7 +55,29 @@ case Event.eventHeader.eventClass of
       CSTA_ROUTE_REGISTER_CANCEL_CONF :
         RaiseCSTARouteRegisterCancelConfEvent(Event, PrivateData);
       end;
+
+  CSTAEVENTREPORT_ :
+    case Event.eventHeader.eventType of
+      CSTA_ROUTE_REGISTER_ABORT :
+        RaiseCSTARouteRegisterAbortEvent(Event, PrivateData);
+      end;
   end;
+end;
+
+procedure TRoutingServicesCtConector.RaiseCSTARouteRegisterAbortEvent(
+  Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
+begin
+if not Assigned(FOnCSTARouteRegisterAbort) then
+  exit;
+
+try
+  FOnCSTARouteRegisterAbort(Self, Event._event.cstaEventReport.registerAbort.routeRegisterReqID);
+except
+  on E : Exception do
+    begin
+    CatchEventException( 'FOnCSTARouteRegisterAbort', E.Message );
+    end;
+end;
 end;
 
 procedure TRoutingServicesCtConector.RaiseCSTARouteRegisterCancelConfEvent(

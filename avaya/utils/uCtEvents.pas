@@ -438,6 +438,9 @@ type
   TCSTARouteRegisterCancelConfEvent = procedure(Sender : TObject; InvokeID : TInvokeID;
     routeRegisterReqId : RouteRegisterReqID_t) of object;
 
+  TCSTARouteRegisterAbortEvent = procedure(Sender : TObject;
+    routeRegisterReqId : RouteRegisterReqID_t) of object;
+
 implementation
 
 end.
