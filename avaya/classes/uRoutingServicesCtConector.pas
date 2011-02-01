@@ -2,11 +2,17 @@ unit uRoutingServicesCtConector;
 
 interface
 
-uses uEscapeServicesCtConector, uCtTypes, uACS_h, uCSTADefs_h;
+uses uEscapeServicesCtConector, uCtTypes, uACS_h, uCSTA_h, uCSTADefs_h,
+  uATTPriv_h, uCtEvents;
 
 type
   TRoutingServicesCtConector = class(TEscapeServicesCtConector)
+  private
+    FOnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent;
 
+    procedure RaiseCSTARouteRegisterReqConfEvent(Event : CSTAEvent_t; PrivateData : ATTPrivateData_t);
+  protected
+    procedure HandleCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );override;
   public
     function RouteRegisterReq( const routingDevice : TDeviceID;
       const InvokeID : TInvokeID = 0 ) : TSAPI;
@@ -20,13 +26,34 @@ type
       const routingCrossRefID : RoutingCrossRefID_t;
       const errorValue : CSTAUniversalFailure_t;
       const InvokeId : TInvokeID = 0) : TSAPI;
+  published
+    property OnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent read FOnCSTARouteRegisterRegisterRecConf write FOnCSTARouteRegisterRegisterRecConf;
   end;
 
 implementation
 
-uses SysUtils, uStreamerCtConector, uCSTA_h, uMonitorServicesCtConector;
+uses SysUtils, uStreamerCtConector, uMonitorServicesCtConector;
 
 { TRoutingServicesCtConector }
+
+procedure TRoutingServicesCtConector.HandleCtEvent(Event: CSTAEvent_t;
+  PrivateData: ATTPrivateData_t);
+begin
+inherited;
+case Event.eventHeader.eventClass of
+  CSTACONFIRMATION :
+    case Event.eventHeader.eventType of
+      CSTA_ROUTE_REGISTER_REQ_CONF :
+        RaiseCSTARouteRegisterReqConfEvent(Event, PrivateData);
+      end;
+  end;
+end;
+
+procedure TRoutingServicesCtConector.RaiseCSTARouteRegisterReqConfEvent(
+  Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
+begin
+if not Assigned
+end;
 
 function TRoutingServicesCtConector.RouteEndInv(
   const routeRegisterReqID: RouteRegisterReqID_t;
