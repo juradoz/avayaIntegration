@@ -441,6 +441,49 @@ type
   TCSTARouteRegisterAbortEvent = procedure(Sender : TObject;
     routeRegisterReqId : RouteRegisterReqID_t) of object;
 
+  TCSTARouteRequestEvent =  procedure(Sender : TObject;
+    routeRegisterReqId : RouteRegisterReqID_t;
+    routingCrossRefID : RoutingCrossRefID_t;
+    currentRoute       : DeviceID_t;
+    callingDevice      : DeviceID_t;
+    routedCall         : ConnectionID_t;
+    routedSelAlgorithm : SelectValue_t;
+    priority           : Boolean;
+    setupInformation   : SetUpValues_t) of object;
+
+  TCSTARouteRequestExtEvent = procedure(Sender : TObject;
+    routeRegisterReqId : RouteRegisterReqID_t;
+    routingCrossRefID : RoutingCrossRefID_t;
+    currentRoute       : CalledDeviceID_t;
+    callingDevice      : CallingDeviceID_t;
+    routedCall         : ConnectionID_t;
+    routedSelAlgorithm : SelectValue_t;
+    priority           : Boolean;
+    setupInformation   : SetUpValues_t) of object;
+
+  TCSTAReRouteRequestEvent = procedure(Sender : TObject;
+    routeRegisterReqId : RouteRegisterReqID_t;
+    routingCrossRefID : RoutingCrossRefID_t) of object;
+
+  TCSTARouteUsedEvent = procedure(Sender : TObject;
+    routeRegisterReqId : RouteRegisterReqID_t;
+    routingCrossRefID : RoutingCrossRefID_t;
+    routeUsed          : DeviceID_t;
+    callingDevice      : DeviceID_t;
+    domain             : Boolean) of object;
+
+  TCSTARouteUsedExtEvent = procedure(Sender : TObject;
+    routeRegisterReqId : RouteRegisterReqID_t;
+    routingCrossRefID : RoutingCrossRefID_t;
+    routeUsed          : CalledDeviceID_t;
+    callingDevice      : CallingDeviceID_t;
+    domain             : Boolean) of object;
+
+  TCSTARouteEndEvent = procedure(Sender : TObject;
+    routeRegisterReqId : RouteRegisterReqID_t;
+    routingCrossRefID : RoutingCrossRefID_t;
+    errorValue         : CSTAUniversalFailure_t) of object;
+
 implementation
 
 end.
