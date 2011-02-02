@@ -2,7 +2,7 @@ unit uCtConector;
 
 interface
 
-uses uEscapeServicesCtConector;
+uses uRoutingServicesCtConector;
 
 type
   // CLASSE UTILIZADA PARA CONEXAO COM O PABX AVAYA.
@@ -63,7 +63,7 @@ type
   end;
   }
 
-  TCtConector = class( TEscapeServicesCtConector );
+  TCtConector = class( TRoutingServicesCtConector );
 
 implementation
 
