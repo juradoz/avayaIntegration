@@ -1,5 +1,3 @@
-bin/*
-build/*
 *.exe
 *.cfg
 *.dof
