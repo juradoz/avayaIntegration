@@ -6,10 +6,10 @@ unit uCtClient;
 
 interface
 
-uses uEscapeServicesCtConector;
+uses uRoutingServicesCtConector;
 
 type
-  TCtClient = class( TEscapeServicesCtConector );
+  TCtClient = class( TRoutingServicesCtConector );
 
 implementation
 
