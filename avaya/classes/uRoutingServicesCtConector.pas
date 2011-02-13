@@ -8,8 +8,8 @@ uses uEscapeServicesCtConector, uCtTypes, uACS_h, uCSTA_h, uCSTADefs_h,
 type
   TRoutingServicesCtConector = class(TEscapeServicesCtConector)
   private
-    FOnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent;
-    FOnCSTARouteRegisterRegisterCancelConf : TCSTARouteRegisterCancelConfEvent;
+    FOnCSTARouteRegisterRecConf : TCSTARouteRegisterReqConfEvent;
+    FOnCSTARouteRegisterCancelConf : TCSTARouteRegisterCancelConfEvent;
     FOnCSTARouteRegisterAbort : TCSTARouteRegisterAbortEvent;
     FOnCSTARouteRequest : TCSTARouteRequestEvent;
     FOnCSTARouteRequestExt : TCSTARouteRequestExtEvent;
@@ -43,8 +43,8 @@ type
       const errorValue : CSTAUniversalFailure_t;
       const InvokeId : TInvokeID = 0) : TSAPI;
   published
-    property OnCSTARouteRegisterRegisterRecConf : TCSTARouteRegisterReqConfEvent read FOnCSTARouteRegisterRegisterRecConf write FOnCSTARouteRegisterRegisterRecConf;
-    property OnCSTARouteRegisterRegisterCancelConf : TCSTARouteRegisterCancelConfEvent read FOnCSTARouteRegisterRegisterCancelConf write FOnCSTARouteRegisterRegisterCancelConf;
+    property OnCSTARouteRegisterRecConf : TCSTARouteRegisterReqConfEvent read FOnCSTARouteRegisterRecConf write FOnCSTARouteRegisterRecConf;
+    property OnCSTARouteRegisterCancelConf : TCSTARouteRegisterCancelConfEvent read FOnCSTARouteRegisterCancelConf write FOnCSTARouteRegisterCancelConf;
     property OnCSTARouteRegisterAbort : TCSTARouteRegisterAbortEvent read FOnCSTARouteRegisterAbort write FOnCSTARouteRegisterAbort;
     property OnCSTARouteRequest : TCSTARouteRequestEvent read FOnCSTARouteRequest write FOnCSTARouteRequest;
     property OnCSTARouteRequestExt : TCSTARouteRequestExtEvent read FOnCSTARouteRequestExt write FOnCSTARouteRequestExt;
@@ -157,16 +157,16 @@ end;
 procedure TRoutingServicesCtConector.RaiseCSTARouteRegisterCancelConfEvent(
   Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
 begin
-if not Assigned(FOnCSTARouteRegisterRegisterCancelConf) then
+if not Assigned(FOnCSTARouteRegisterCancelConf) then
   exit;
 
 try
-  FOnCSTARouteRegisterRegisterCancelConf(Self, Event._event.cstaConfirmation.invokeID,
+  FOnCSTARouteRegisterCancelConf(Self, Event._event.cstaConfirmation.invokeID,
     Event._event.cstaConfirmation.routeCancel.routeRegisterReqID);
 except
   on E : Exception do
     begin
-    CatchEventException( 'FOnCSTARouteRegisterRegisterCancelConf', E.Message );
+    CatchEventException( 'FOnCSTARouteRegisterCancelConf', E.Message );
     end;
 end;
 end;
@@ -174,16 +174,16 @@ end;
 procedure TRoutingServicesCtConector.RaiseCSTARouteRegisterReqConfEvent(
   Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
 begin
-if not Assigned(FOnCSTARouteRegisterRegisterRecConf) then
+if not Assigned(FOnCSTARouteRegisterRecConf) then
   exit;
 
 try
-  FOnCSTARouteRegisterRegisterRecConf(Self, Event._event.cstaConfirmation.invokeID,
+  FOnCSTARouteRegisterRecConf(Self, Event._event.cstaConfirmation.invokeID,
     Event._event.cstaConfirmation.routeRegister.registerReqID);
 except
   on E : Exception do
     begin
-    CatchEventException( 'FOnCSTARouteRegisterRegisterRecConf', E.Message );
+    CatchEventException( 'FOnCSTARouteRegisterRecConf', E.Message );
     end;
 end;
 end;
