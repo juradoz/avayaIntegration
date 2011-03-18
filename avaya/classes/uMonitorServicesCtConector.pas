@@ -644,7 +644,7 @@ if PrivateData.length <= 0 then
   exit;
   end;
 
-if ConsistAndExtractReceivedPrivateEvent( PrivateData, ATT_ORIGINATED,
+if not ConsistAndExtractReceivedPrivateEvent( PrivateData, ATT_ORIGINATED,
   ATTEvent, 'FOnCSTAOriginated' ) then
   exit;
 
