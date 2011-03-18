@@ -895,12 +895,15 @@ type
     localConnectionState : LocalConnectionState_t;
     end;
 
+  ArrayOfCSTASnapshotCallResponseInfo_t =
+    array [0..9] of CSTASnapshotCallResponseInfo_t;
+
   pCSTASnapshotCallResponseInfo_t = ^CSTASnapshotCallResponseInfo_t;
 
 
   CSTASnapshotCallData_t = record
     count : _Int;
-    info : ^CSTASnapshotCallResponseInfo_t;
+    info : ^ArrayOfCSTASnapshotCallResponseInfo_t;
     end;
 
 

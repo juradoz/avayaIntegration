@@ -17,6 +17,7 @@ type
       FOnCSTASnapshotCallConf: TCSTASnapshotCallConfEvent;
 
       procedure RaiseCSTASnapshotDeviceConfEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
+      procedure RaiseCSTASnapshotCallConfEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
     protected
       procedure HandleCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );override;
     public
@@ -45,11 +46,31 @@ case Event.eventHeader.eventClass of
     case Event.eventHeader.eventType of
       CSTA_SNAPSHOT_DEVICE_CONF :
         RaiseCSTASnapshotDeviceConfEvent( Event, PrivateData );
+
+      CSTA_SNAPSHOT_CALL_CONF :
+        RaiseCSTASnapshotCallConfEvent(Event, PrivateData);
     end;
   end;
 end;
 
 // DISPARADOR DO EVENTO DE CSTASNAPSHOTDEVICECONF
+procedure TSnapShotServicesCtConector.RaiseCSTASnapshotCallConfEvent(
+  Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
+begin
+if not Assigned( FOnCSTASnapshotCallConf ) then
+  exit;
+
+try
+  FOnCSTASnapshotCallConf( Self, Event._event.cstaConfirmation.invokeID,
+    Event._event.cstaConfirmation.snapshotCall.snapshotData );
+except
+  on E : Exception do
+    begin
+    CatchEventException( 'FOnCSTASnapshotCallConf', E.Message );
+    end;
+end;
+end;
+
 procedure TSnapShotServicesCtConector.RaiseCSTASnapshotDeviceConfEvent(
   Event: CSTAEvent_t; PrivateData: ATTPrivateData_t);
 begin
