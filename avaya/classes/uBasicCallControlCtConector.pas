@@ -135,7 +135,7 @@ if not CheckParams( ( ( activecall > 0 ) and ( otherCall > 0 ) ),
   exit;
 
 PrepareConnectionID_t( FactiveCall, activeCall, DeviceID );
-PrepareConnectionID_t( FotherCall, activeCall, DeviceID );
+PrepareConnectionID_t( FotherCall, otherCall, DeviceID );
 Result := cstaAlternateCall( FAcsHandle, InvokeID, @FactiveCall, @FotherCall, nil );
 CheckForGoodCtResult( Result, 'cstaAlternateCall' );
 end;
