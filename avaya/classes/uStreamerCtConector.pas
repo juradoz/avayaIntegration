@@ -56,7 +56,8 @@ type
       CtFunction : ShortString ) : Boolean;
 
     { Generic raiser of Null Confirmation events }
-    procedure RaiseNullConfEvent( NullConfEvent : TNullConfEvent; EventName : String; Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
+    procedure RaiseNullConfEvent( NullConfEvent : TNullConfEvent;
+      EventName : String; Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
 
     { Virtual method used to handle the CtEvent }
     procedure HandleCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );virtual;

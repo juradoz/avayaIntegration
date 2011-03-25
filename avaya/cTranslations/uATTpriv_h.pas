@@ -32,8 +32,8 @@ type
     case ATTEventType_t of
     //* private version 6 */
     //    0 : (ssconference              : ATTSingleStepConferenceCallConfEvent_t);
-    //    1 : (slhold                    : ATTSelectiveListeningHoldConfEvent_t);
-    //    2 : (slretrieve                : ATTSelectiveListeningRetrieveConfEvent_t);
+        1 : (slhold                    : ATTSelectiveListeningHoldConfEvent_t);
+        2 : (slretrieve                : ATTSelectiveListeningRetrieveConfEvent_t);
     //    3 : (sendDTMFTone              : ATTSendDTMFToneConfEvent_t); }
         4 : (queryAcdSplit             : ATTQueryAcdSplitConfEvent_t);
         5 : (queryAgentLogin           : ATTQueryAgentLoginConfEvent_t);
@@ -129,8 +129,8 @@ type
      //  82 : (reconnectCallReq          : ATTReconnectCall_t);
      //  83 : (sendDTMFToneReq           : ATTSendDTMFTone_t);
      //  84 : (ssconferenceReq           : ATTSingleStepConferenceCall_t);
-     //  85 : (slholdReq                 : ATTSelectiveListeningHold_t);
-     //  86 : (slretrieveReq             : ATTSelectiveListeningRetrieve_t);
+       85 : (slholdReq                 : ATTSelectiveListeningHold_t);
+       86 : (slretrieveReq             : ATTSelectiveListeningRetrieve_t);
      //  87 : (setAgentStateReq          : ATTSetAgentState_t);
      //  88 : (queryAgentStateReq        : ATTQueryAgentState_t);
      //  89 : (queryAcdSplitReq          : ATTQueryAcdSplit_t);
@@ -230,6 +230,16 @@ function attQueryTrunkGroup( privateData : pATTPrivateData_t;
 
 function attQueryDeviceName( privateData : pATTPrivateData_t;
   const device : pDeviceID_t): TSAPI; stdcall; external ATT_DLL_NAME;
+
+function attSelectiveListeningHold(privateData : pATTPrivateData_t;
+  const subjectConnection : pConnectionID_t;
+  allParties : boolean;
+  const selectedParty : pConnectionID_t): TSAPI; stdcall; external ATT_DLL_NAME;
+
+function attSelectiveListeningRetrieve(privateData : pATTPrivateData_t;
+  const subjectConnection : pConnectionID_t;
+  allParties : boolean;
+  const selectedParty : pConnectionID_t): TSAPI; stdcall; external ATT_DLL_NAME;
 
 implementation
 

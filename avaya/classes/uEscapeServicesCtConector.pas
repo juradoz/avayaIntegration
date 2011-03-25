@@ -23,6 +23,8 @@ type
       FOnCSTAPrivate                : TCSTAPrivateEvent;
       FOnATTQueryCallClassifierConf : TATTQueryCallClassifierConfEvent;
       FOnATTQueryDeviceNameConf     : TATTQueryDeviceNameConfEvent;
+      FOnATTSelectiveListeningHoldConf : TATTSelectiveListeningHoldConfEvent;
+      FOnATTSelectiveListeningRetrieveConf : TATTSelectiveListeningRetrieveConfEvent;
 
       procedure RaiseCSTAEscapeSvcConf( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
       procedure RaiseATTQueryAcdSplitConf( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
@@ -33,6 +35,8 @@ type
       procedure RaiseATTQueryTgConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
       procedure RaiseATTQueryCallClassifierConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
       procedure RaiseATTQueryDeviceNameEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTSelectiveListeningHoldConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTSelectiveListeningRetrieveConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
     protected
       procedure HandleCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );override;
     public
@@ -42,6 +46,16 @@ type
       function QueryTrunkGroup( const device : TDeviceID; const InvokeID : TInvokeID = 0 ) : TSAPI;
       function QueryCallClassifier( const InvokeID : TInvokeID = 0 ) : TSAPI;
       function QueryDeviceName( const device : TDeviceID; const InvokeID : TInvokeID = 0 ) : TSAPI;
+      function SelectiveListeningHold(const subjectConnectionCallId : TCallId;
+        const subjectConnectionDevice : TDeviceId; const allParties : boolean;
+        const selectedPartyCallId : TCallId;
+        const selectedPartyDevice : TDeviceId;
+        const InvokeID : TInvokeID = 0) : TSAPI;
+      function SelectiveListeningRetrieve(const subjectConnectionCallId : TCallId;
+        const subjectConnectionDevice : TDeviceId; const allParties : boolean;
+        const selectedPartyCallId : TCallId;
+        const selectedPartyDevice : TDeviceId;
+        const InvokeID : TInvokeID = 0) : TSAPI;
     published
       property OnCSTAEscapeSvcConf : TCSTAEscapeSvcConfEvent read FOnCSTAEscapeSvcConf write FOnCSTAEscapeSvcConf;
       property OnATTQueryAcdSplitConf : TATTQueryAcdSplitConfEvent read FOnATTQueryAcdSplitConf write FOnATTQueryAcdSplitConf;
@@ -52,6 +66,8 @@ type
       property OnATTQueryTgConf         : TATTQueryTgConfEvent read FOnATTQueryTgConf write FOnATTQueryTgConf;
       property OnATTQueryCallClassifierConf : TATTQueryCallClassifierConfEvent read FOnATTQueryCallClassifierConf write FOnATTQueryCallClassifierConf;
       property OnATTQueryDeviceNameConf : TATTQueryDeviceNameConfEvent read FOnATTQueryDeviceNameConf write FOnATTQueryDeviceNameConf;
+      property OnATTSelectiveListeningHoldConf : TATTSelectiveListeningHoldConfEvent read FOnATTSelectiveListeningHoldConf write FOnATTSelectiveListeningHoldConf;
+      property OnATTSelectiveListeningRetrieveConf : TATTSelectiveListeningRetrieveConfEvent read FOnATTSelectiveListeningRetrieveConf write FOnATTSelectiveListeningRetrieveConf;
   end;
 
 implementation
@@ -281,6 +297,12 @@ case ATTEvent.eventType of
 
   ATT_QUERY_DEVICE_NAME_CONF :
     RaiseATTQueryDeviceNameEvent( Event, ATTEvent );
+
+  ATT_SELECTIVE_LISTENING_HOLD_CONF :
+    RaiseATTSelectiveListeningHoldConfEvent( Event, ATTEvent );
+
+  ATT_SELECTIVE_LISTENING_RETRIEVE_CONF :
+    RaiseATTSelectiveListeningRetrieveConfEvent( Event, ATTEvent );
   end;
 end;
 
@@ -406,6 +428,96 @@ except
   on E : Exception do
     begin
     CatchEventException( 'FOnATTQueryDeviceNameConf', E.Message );
+    end;
+end;
+end;
+
+function TEscapeServicesCtConector.SelectiveListeningHold(
+  const subjectConnectionCallId: TCallId;
+  const subjectConnectionDevice: TDeviceId; const allParties: boolean;
+  const selectedPartyCallId: TCallId; const selectedPartyDevice: TDeviceId;
+  const InvokeID : TInvokeID): TSAPI;
+var
+  subjectConnection, selectedParty : ConnectionID_t;
+  PrivateData : ATTPrivateData_t;
+begin
+Result := DEFAULT_ERROR_CODE;
+if not CheckParams( (subjectConnectionCallId > 0) and
+  (Length(subjectConnectionDevice) > 0) and (selectedPartyCallId > 0) and
+  (Length(selectedPartyDevice) > 0), Format( '%s.HoldCall', [ ClassName ] ) ) then
+  exit;
+
+PrepareATTPrivateData_t(PrivateData);
+PrepareConnectionID_t( subjectConnection, subjectConnectionCallId,
+  subjectConnectionDevice );
+PrepareConnectionID_t( selectedParty, selectedPartyCallId, selectedPartyDevice );
+
+Result := attSelectiveListeningHold(@PrivateData, @subjectConnection,
+  allParties, @selectedParty);
+
+if not CheckForGoodCtResult( Result, 'attSelectiveListeningHold' ) then
+  exit;
+
+Result := EscapeServices( PrivateData, InvokeID );
+end;
+
+function TEscapeServicesCtConector.SelectiveListeningRetrieve(
+  const subjectConnectionCallId: TCallId;
+  const subjectConnectionDevice: TDeviceId; const allParties: boolean;
+  const selectedPartyCallId: TCallId; const selectedPartyDevice: TDeviceId;
+  const InvokeID: TInvokeID): TSAPI;
+var
+  subjectConnection, selectedParty : ConnectionID_t;
+  PrivateData : ATTPrivateData_t;
+begin
+Result := DEFAULT_ERROR_CODE;
+if not CheckParams( (subjectConnectionCallId > 0) and
+  (Length(subjectConnectionDevice) > 0) and (selectedPartyCallId > 0) and
+  (Length(selectedPartyDevice) > 0), Format( '%s.HoldCall', [ ClassName ] ) ) then
+  exit;
+
+PrepareATTPrivateData_t(PrivateData);
+PrepareConnectionID_t( subjectConnection, subjectConnectionCallId,
+  subjectConnectionDevice );
+PrepareConnectionID_t( selectedParty, selectedPartyCallId, selectedPartyDevice );
+
+Result := attSelectiveListeningRetrieve(@PrivateData, @subjectConnection,
+  allParties, @selectedParty);
+
+if not CheckForGoodCtResult( Result, 'attSelectiveListeningRetrieve' ) then
+  exit;
+
+Result := EscapeServices( PrivateData, InvokeID );
+end;
+
+procedure TEscapeServicesCtConector.RaiseATTSelectiveListeningHoldConfEvent(
+  Event: CSTAEvent_t; ATTEvent: ATTEvent_t);
+begin
+if not Assigned( FOnATTSelectiveListeningHoldConf ) then
+  exit;
+
+try
+  FOnATTSelectiveListeningHoldConf( Self, Event._event.cstaConfirmation.invokeID);
+except
+  on E : Exception do
+    begin
+    CatchEventException( 'FOnATTSelectiveListeningHoldConf', E.Message );
+    end;
+end;
+end;
+
+procedure TEscapeServicesCtConector.RaiseATTSelectiveListeningRetrieveConfEvent(
+  Event: CSTAEvent_t; ATTEvent: ATTEvent_t);
+begin
+if not Assigned( FOnATTSelectiveListeningRetrieveConf ) then
+  exit;
+
+try
+  FOnATTSelectiveListeningHoldConf( Self, Event._event.cstaConfirmation.invokeID);
+except
+  on E : Exception do
+    begin
+    CatchEventException( 'FOnATTSelectiveListeningRetrieveConf', E.Message );
     end;
 end;
 end;

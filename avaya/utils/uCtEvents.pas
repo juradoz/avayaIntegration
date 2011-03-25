@@ -380,6 +380,10 @@ type
     associatedClass  : ATTExtensionClass_t;
     associatedDevice : DeviceID_t ) of object;
 
+  TATTSelectiveListeningHoldConfEvent = TNullConfEvent;
+
+  TATTSelectiveListeningRetrieveConfEvent = TNullConfEvent;
+
 { Events presents in TSnapShotServicesCtConector }
   { Confirmation to cstaSnapshotDevice }
   TCSTASnapshotDeviceConfEvent = procedure( Sender : TObject; InvokeID : TInvokeID;
