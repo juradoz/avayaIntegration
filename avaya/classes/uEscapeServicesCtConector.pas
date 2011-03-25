@@ -513,7 +513,7 @@ if not Assigned( FOnATTSelectiveListeningRetrieveConf ) then
   exit;
 
 try
-  FOnATTSelectiveListeningHoldConf( Self, Event._event.cstaConfirmation.invokeID);
+  FOnATTSelectiveListeningRetrieveConf( Self, Event._event.cstaConfirmation.invokeID);
 except
   on E : Exception do
     begin
