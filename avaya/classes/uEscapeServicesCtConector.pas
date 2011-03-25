@@ -25,14 +25,14 @@ type
       FOnATTQueryDeviceNameConf     : TATTQueryDeviceNameConfEvent;
 
       procedure RaiseCSTAEscapeSvcConf( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
-        procedure RaiseATTQueryAcdSplitConf( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
-        procedure RaiseATTQueryAgentLoginConf( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
-        procedure RaiseATTQueryAgentLoginResp( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
-        procedure RaiseATTQueryAgentLoginEnd( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
-        procedure RaiseCSTAPrivateEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
-        procedure RaiseATTQueryTgConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
-        procedure RaiseATTQueryCallClassifierConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
-        procedure RaiseATTQueryDeviceNameEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTQueryAcdSplitConf( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTQueryAgentLoginConf( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTQueryAgentLoginResp( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTQueryAgentLoginEnd( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseCSTAPrivateEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );
+      procedure RaiseATTQueryTgConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTQueryCallClassifierConfEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
+      procedure RaiseATTQueryDeviceNameEvent( Event : CSTAEvent_t; ATTEvent : ATTEvent_t );
     protected
       procedure HandleCtEvent( Event : CSTAEvent_t; PrivateData : ATTPrivateData_t );override;
     public
