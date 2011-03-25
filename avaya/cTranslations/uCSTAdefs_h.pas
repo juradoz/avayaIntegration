@@ -864,10 +864,11 @@ type
     null : Nulltype;
     end;
 
+  ArrayOfLocalConnectionState_t = array[0..9] of LocalConnectionState_t;
 
   CSTACallState_t = record
     count : _Int;
-    state : ^LocalConnectionState_t;
+    state : ^ArrayOfLocalConnectionState_t;
     end;
 
 
